@@ -23,7 +23,7 @@ class Unit {
     return type ?? UnitType(name: '');
   }
 
-  // Add an user and associate it with a role in the unit
+  // Add a user and associate it with a role in the unit
   /* TODO: remove
   void addUserWithRole(User user, UnitRole role) {
     if (user.units == null) {
@@ -38,10 +38,6 @@ class Unit {
     rolesAndUsers[role]?.add(user); // Add the user to the list of users for the role
   }
   */ 
-
-  void setId(){
-  //TODO: create unique ID
-  }
   
   void setName(String name){
 
