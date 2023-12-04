@@ -1,6 +1,6 @@
 
 import 'package:housekeeper_v1/screens/settings/Settings.dart' as hk;
-import 'package:housekeeper_v1/screens/wrapper.dart';
+import 'package:housekeeper_v1/features/authentication/auth_screens/Authentication.dart';
 import 'package:housekeeper_v1/services/data_repository.dart';
 
 import 'commons.dart';
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: '/',
           routes: {
-            '/': (context) => Wrapper(), //Instead of loginpage
+            '/': (context) => Authentication(), //Instead of loginpage
             '/home': (context) => Home(),
             '/newuser': (context) => Register(),
             '/create_unit': (context) => CreateUnitPage(),
@@ -104,12 +104,13 @@ class UnitState extends ChangeNotifier {
 
 class AppState extends ChangeNotifier {
   final DataRepositoryUser repositoryUser = DataRepositoryUser();
-  String currentUserId = '';
+  String? currentUserId = null;
   User currentUser=User();
 
   Future<void> updateCurrentUser() async {
+
     try {
-      currentUser = await repositoryUser.getUserById(currentUserId) ?? User();
+      currentUser = await repositoryUser.getUserById(currentUserId!) ?? User();
     } catch (e) {
       print("Error getting current user: $e");
       return null;
@@ -137,16 +138,16 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-void setCurrentUserName(String name) async {
-  updateCurrentUser();
-  User userToUpdate = currentUser;
+  void setCurrentUserName(String name) async {
+    updateCurrentUser();
+    User userToUpdate = currentUser;
 
-  userToUpdate.setName(name);
-  repositoryUser.updateUser(userToUpdate);
-  notifyListeners();
+    userToUpdate.setName(name);
+    repositoryUser.updateUser(userToUpdate);
+    notifyListeners();
 
 
-}
+  }
 
   void addUnitToCurrentUser(Unit unit, UnitRole role) async {
     updateCurrentUser();

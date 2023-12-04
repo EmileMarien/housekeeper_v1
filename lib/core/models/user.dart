@@ -10,7 +10,7 @@ class User {
   List<String>? unitIds;
   final String? code; //code firebaseauth excemption
 
-  User({this.code,this.unitIds,this.name,this.surname,this.referenceId,this.units,this.email,this.password});
+  User({this.code,this.unitIds,this.name,this.surname,this.referenceId,this.units,this.password, this.email});
   
   factory User.fromSnapshot(DocumentSnapshot snapshot) {
     final newUser = User.fromJson(snapshot.data() as Map<String,dynamic>);

@@ -3,7 +3,7 @@ import 'package:housekeeper_v1/commons.dart';
 import '../repositories/auth.dart';
 
 class Register extends StatefulWidget{
-
+  /// Registers a user
   final Function? toggleView;
    Register({this.toggleView});
 

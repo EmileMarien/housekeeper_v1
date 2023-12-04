@@ -3,9 +3,7 @@ import 'package:housekeeper_v1/commons.dart';
 import '../repositories/auth.dart';
 import '../../../services/data_repository.dart';
 
-
-
-//This is swapped with the wrapper page
+//add right methods from LoginPage
 
 class Login extends StatefulWidget {
   final Function? toggleView;

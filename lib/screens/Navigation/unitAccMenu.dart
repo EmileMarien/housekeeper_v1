@@ -1,5 +1,4 @@
 import '../../commons.dart';
-import '../../features/authentication/repositories/auth.dart';
 
 
 
@@ -35,7 +34,7 @@ class _UnitAccMenuState extends State<UnitAccMenu> {
               return units.map((Unit unit) {
                 return PopupMenuItem<Unit>(
                   value: unit,
-                  child: Text(unit.name),
+                  child: Text(unit.name ?? "null"),
                 );
               }).toList();
             },
@@ -43,6 +42,7 @@ class _UnitAccMenuState extends State<UnitAccMenu> {
           IconButton(
             onPressed: () async {
               await _auth.signOut();
+              return Auth_handler();
             }, 
             icon: Icon(Icons.exit_to_app_outlined),
           ),

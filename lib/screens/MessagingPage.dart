@@ -6,6 +6,6 @@ import '../main.dart';
 class MessagingPage extends StatelessWidget{ //TODO: add method to add unitTypes
   Widget build(BuildContext context){
     var unitState = Provider.of<UnitState>(context);
-    return Text('hallo');
+    return Text('hi Lino, how you doin ;)))');
   }
 }
