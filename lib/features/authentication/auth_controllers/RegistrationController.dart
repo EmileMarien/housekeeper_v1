@@ -23,6 +23,7 @@ class RegistrationController {
     Navigator.pushNamed(context, '/home');
   }
 
+
   void toggleObscureText() {
     _obscureText = !_obscureText;
   }
