@@ -34,8 +34,9 @@ class HomeController {
   }
 
   void signOut() {
-    Navigator.pushNamed(context, '/authentication');
     authState.signOut();
+    userState.removeUser();
+    Navigator.pushNamed(context, '/authentication');
   }
 }
 

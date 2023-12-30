@@ -27,6 +27,7 @@ class AuthenticationState extends ChangeNotifier {
 
   void signOut() {
     repositoryAuth.signOut();
+
     notifyListeners();
   }
 }

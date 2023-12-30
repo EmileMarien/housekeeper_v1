@@ -29,6 +29,11 @@ class UserState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeUser() {
+    currentUserId='';
+    notifyListeners();
+  }
+
   bool checkIfEmailExists(String email) {
     Stream<List<User>> accountsStream = repositoryUser.getUsersStream();
 

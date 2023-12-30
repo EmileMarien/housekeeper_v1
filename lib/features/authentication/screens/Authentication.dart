@@ -29,7 +29,7 @@ class _Authentication extends State<Authentication> {
     final user = Provider
         .of<UserState>(context)
         .currentUserId;
-
+    print(user);
     if (user == '') {
       if (showSignin) {
         return LoginScreen(toggleView: toggleView);
