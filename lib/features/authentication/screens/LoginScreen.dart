@@ -14,18 +14,19 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreen extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController(); //Don't put in build because then it will be reinitialized every time build is called
+  final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    LoginController controller = LoginController(context,_formKey);
+    LoginController controller = LoginController(context);
 
     final emailField = TextFormField(
-      key: _formKey,
-      controller: controller.emailController,
+      controller: emailController,
       autofocus: false,
       validator: (value) {
         if (value != null) {
           if (value.contains('@') && value.endsWith('.com')) {
-              if (controller.checkIfEmailExists()) {
+              if (controller.checkIfEmailExists(emailController.text)) {
                 // Email exists
                 return null; // Email exists
               } else {
@@ -44,9 +45,8 @@ class _LoginScreen extends State<LoginScreen> {
     );
 
     final passwordField = TextFormField(
-      key: _formKey,
         obscureText: controller.obscureText,
-        controller: controller.passwordController,
+        controller: passwordController,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -126,16 +126,19 @@ class _LoginScreen extends State<LoginScreen> {
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
-            User? result = await controller.loginEmailPassword();
+          if (_formKey.currentState!.validate()) {
+            User? result = await controller.loginEmailPassword(emailController.text, passwordController.text);
             if (result == null) { //null means unsuccessfull authentication
               showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: Text('Registration failed'),
-                    );
-                  });
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text('Registration failed'),
+                  );
+                },
+              );
             }
+          }
           },
         child: Text(
           "Log in",

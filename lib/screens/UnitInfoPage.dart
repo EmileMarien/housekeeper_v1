@@ -4,7 +4,7 @@ class UnitInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
   //var unitState = context.watch<UnitState>();
-  var appState = context.watch<AppState>();
+  var appState = context.watch<UserState>();
 
   return ListView(
     children: [

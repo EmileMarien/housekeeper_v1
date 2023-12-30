@@ -4,6 +4,7 @@ import 'package:housekeeper_v1/core/repositories/data_repository.dart';
 
 import 'commons.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'features/authentication/states/AuthenticationState.dart';
 import 'firebase_options.dart';
 import 'features/authentication/repositories/auth.dart';
 
@@ -12,10 +13,6 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); //initialize firebase
   runApp(const MyApp());
 }
-
-//void main() {
-//  runApp(const MainApp());
-//}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -28,6 +25,7 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (context) => UserState()),
           ChangeNotifierProvider(create: (context) => UnitState()),
+          ChangeNotifierProvider(create: (context) => AuthenticationState()),
         ],
         child: MaterialApp(
           theme: ThemeData(

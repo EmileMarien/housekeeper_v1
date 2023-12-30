@@ -28,6 +28,8 @@ dev_dependencies:
   flutter_driver:
     sdk: flutter
   test: ^1.24.1
+  mockito: ^5.0.8
+  build_runner: ^2.0.4
 
 
 flutter:

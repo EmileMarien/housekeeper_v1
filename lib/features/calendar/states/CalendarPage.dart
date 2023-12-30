@@ -10,7 +10,7 @@ import '../../../main.dart';
 class CalendarPage extends StatelessWidget {
   @override
   Widget build(BuildContext context){
-    var appState = Provider.of<AppState>(context); // Access the AppState instance
+    var appState = Provider.of<UserState>(context); // Access the AppState instance
     //var unitState = Provider.of<UnitState>(context); // Access the UnitState instance
     var repositoryUser = appState.repositoryUser;
     return StreamBuilder<QuerySnapshot>(

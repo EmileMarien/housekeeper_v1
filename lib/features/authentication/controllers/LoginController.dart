@@ -7,18 +7,13 @@ class LoginController {
   final BuildContext context;
   final AuthenticationState authState;
   final UserState userState;
-  final GlobalKey<FormState> formKey; //TODO: what does this do?
 
-  LoginController(this.context, this.formKey) : authState = AuthenticationState(), userState = Provider.of<UserState>(context);
-
-  //final repositoryUser = appState.repositoryUser;
+  LoginController(this.context) : authState = AuthenticationState(), userState = Provider.of<UserState>(context);
 
   bool _obscureText = true;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-
 
   bool get obscureText => _obscureText;
 
@@ -26,10 +21,45 @@ class LoginController {
     _obscureText = !_obscureText;
   }
 
-  bool checkIfEmailExists() {
-    return userState.checkIfEmailExists(emailController.text);
+  bool checkIfEmailExists(text) {
+    return userState.checkIfEmailExists(text);
   }
 
+  void navigateToHome(){
+    Navigator.pushNamed(context, '/home');
+  }
+
+  Future<User?> loginEmailPassword(email,password) async {
+    User result = await authState.signInEmailPassword(
+      User(email: email, password: passwordController.text),
+    );
+
+    if (result.referenceId == null) {
+      // Unsuccessful authentication
+      return null;
+    } else {
+      userState.setCurrentUserId(result.referenceId!);
+      navigateToHome();
+      // Successful registration
+      return result;
+    }
+  }
+
+  Future<User?> loginGoogle() async {
+    User result = await authState.signInEmailPassword(
+      User(email: emailController.text, password: passwordController.text),
+    );
+
+    if (result.referenceId == null) {
+      // Unsuccessful authentication
+      return null;
+    } else {
+      // Successful registration
+      return result;
+
+    }
+
+  }
  /* Future<bool> checkIfEmailExists() async {
     Stream<List<User>> accountsStream = userState.repositoryUser.getUsersStream();
 
@@ -48,43 +78,7 @@ class LoginController {
   }
 */
 
-  void navigateToHome(){
-    Navigator.pushNamed(context, '/home');
-  }
 
-  Future<User?> loginEmailPassword() async {
-    if (formKey.currentState!.validate()) {
-      User result = await authState.signInEmailPassword(
-        User(email: emailController.text, password: passwordController.text),
-      );
-
-      if (result.referenceId == null) {
-        // Unsuccessful authentication
-        return null;
-      } else {
-        userState.setCurrentUserId(result.referenceId!);
-        navigateToHome();
-        // Successful registration
-        return result;
-      }
-    }
-  }
-  Future<User?> loginGoogle() async {
-    if (formKey.currentState!.validate()) {
-      User result = await authState.signInEmailPassword(
-        User(email: emailController.text, password: passwordController.text),
-      );
-
-      if (result.referenceId == null) {
-        // Unsuccessful authentication
-        return null;
-      } else {
-        // Successful registration
-        return result;
-
-      }
-    }
-  }
 }
 
 

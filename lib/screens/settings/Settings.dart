@@ -13,7 +13,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    var appState = Provider.of<AppState>(context);
+    var appState = Provider.of<UserState>(context);
     var unitState = Provider.of<UnitState>(context);
 
     return Scaffold(

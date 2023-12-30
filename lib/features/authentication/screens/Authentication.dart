@@ -3,6 +3,8 @@ import 'LoginScreen.dart';
 import 'RegistrationScreen.dart';
 
 class Authentication extends StatefulWidget {
+  const Authentication({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _Authentication();
@@ -25,17 +27,17 @@ class _Authentication extends State<Authentication> {
   @override
   Widget build(BuildContext context) {
     final user = Provider
-        .of<AppState>(context)
+        .of<UserState>(context)
         .currentUserId;
 
-    if (user == null) {
+    if (user == '') {
       if (showSignin) {
         return LoginScreen(toggleView: toggleView);
       } else {
         return RegistrationScreen(toggleView: toggleView);
       }
     } else {
-      return Home();
+      return HomeScreen();
     }
   }
 }

@@ -1,4 +1,3 @@
-//import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:housekeeper_v1/commons.dart';
@@ -20,8 +19,7 @@ class _CreateUnitPageState extends State<CreateUnitPage> {
     //var repositoryUnit = unitState.repositoryUnit;
     var repositoryUnitType = unitState.repositoryUnitType;
     var repositoryUnitRole = unitState.repositoryUnitRole;
-    var appState = Provider.of<AppState>(context);
-
+    var userState = Provider.of<UserState>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -67,11 +65,15 @@ class _CreateUnitPageState extends State<CreateUnitPage> {
                   });
                 } else {
                   // Save the new unit and navigate back to the previous page
-                  Unit newUnit = Unit(name: unitName, type: selectedType!,rolesAndUsers: {selectedRole!:[appState.getCurrentUser()]});
+                  Unit newUnit = Unit(name: unitName, type: selectedType!,rolesAndUsers: {selectedRole!:[userState.getCurrentUser()]});
                   //Unit newUnit = Unit(name: 'test', rolesAndUsers: {UnitRole(name: 'roletest'):[User(email: 'email', password: 'password')]}, type: UnitType(name: 'typeee'));
                   print('ok'); //tot hier alles ok, probleem is met map
+                  print(newUnit);
                   unitState.addUnit(newUnit);
-                  appState.addUnitToCurrentUser(newUnit,selectedRole!);
+                  userState.addUnitToCurrentUser(newUnit,selectedRole!);
+                  print('test');
+                  print(userState.getCurrentUser().units);
+                  print('test2');
                   Navigator.pop(context);
                 }
               },
@@ -82,7 +84,6 @@ class _CreateUnitPageState extends State<CreateUnitPage> {
       ),
     );
   }
-
 
   Widget _buildListUnitType(BuildContext context, List<DocumentSnapshot> snapshot) {
 
@@ -103,7 +104,6 @@ class _CreateUnitPageState extends State<CreateUnitPage> {
         setState(() {
           selectedType=unitType;
           print(selectedType?.name);
-
         });
       }, 
       style: TextButton.styleFrom(
