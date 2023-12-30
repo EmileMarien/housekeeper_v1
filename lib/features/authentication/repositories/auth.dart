@@ -8,7 +8,7 @@ import 'package:housekeeper_v1/commons.dart' as housekeeper;
 firebase_auth.User? firebaseUser;
 housekeeper.User? customUser;
 
-class AuthService {
+class AuthenticationRepository {
   final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
 
   //add authRepositoryProvider

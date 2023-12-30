@@ -1,10 +1,10 @@
 import 'package:housekeeper_v1/commons.dart';
 
-import '../auth_controllers/LoginController.dart';
+import '../controllers/LoginController.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function? toggleView;
-  LoginScreen({this.toggleView});
+  const LoginScreen({super.key, this.toggleView});
 
   @override
   State<StatefulWidget> createState() {
@@ -13,30 +13,24 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreen extends State<LoginScreen> {
-  final LoginController _controller = LoginController();
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    var appState = Provider.of<AppState>(context);
-    var _obscureText=_controller.obscureText;
+    LoginController controller = LoginController(context,_formKey);
 
-    void navigateToHome(){
-      Navigator.pushNamed(context, '/home');
-    }
     final emailField = TextFormField(
-      controller: _controller.emailController,
+      key: _formKey,
+      controller: controller.emailController,
       autofocus: false,
       validator: (value) {
         if (value != null) {
           if (value.contains('@') && value.endsWith('.com')) {
-            _controller.checkIfEmailExists().then((emailExists) {
-              if (emailExists) {
+              if (controller.checkIfEmailExists()) {
                 // Email exists
                 return null; // Email exists
               } else {
                 return 'Email not registered yet';
               }
-            });
           } else {
             return 'Enter a Valid Email Address';
           }
@@ -50,8 +44,9 @@ class _LoginScreen extends State<LoginScreen> {
     );
 
     final passwordField = TextFormField(
-        obscureText: _obscureText,
-        controller: _controller.passwordController,
+      key: _formKey,
+        obscureText: controller.obscureText,
+        controller: controller.passwordController,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -68,10 +63,10 @@ class _LoginScreen extends State<LoginScreen> {
             hintText: "Password",
             suffixIcon: IconButton(
               icon:
-              Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+              Icon(controller.obscureText ? Icons.visibility : Icons.visibility_off),
               onPressed: () {
                 setState(() {
-                  _obscureText = !_obscureText;
+                  controller.toggleObscureText();
                 });
               },
             ),
@@ -80,12 +75,14 @@ class _LoginScreen extends State<LoginScreen> {
             )));
 
     final txtbutton = TextButton(
+        key: const Key('txtbutton'),
         onPressed: () {
           widget.toggleView!();
         },
         child: const Text('New? Register here'));
 
     final loginGoogleButon = Material(
+      key: const Key('loginGoogleButon'),
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
@@ -93,7 +90,7 @@ class _LoginScreen extends State<LoginScreen> {
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
-          dynamic result = await _controller.loginGoogle();
+          dynamic result = await controller.loginGoogle();
           if (result == null) {
             // Google Sign-In canceled or failed
             showDialog(
@@ -106,7 +103,7 @@ class _LoginScreen extends State<LoginScreen> {
             );
           } else {
             print('went through');
-            navigateToHome();
+            controller.navigateToHome();
           }
 
         },
@@ -121,6 +118,7 @@ class _LoginScreen extends State<LoginScreen> {
 
 
     final loginEmailPasswordButon = Material(
+      key: const Key('loginEmailPasswordButon'),
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
@@ -128,7 +126,7 @@ class _LoginScreen extends State<LoginScreen> {
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
-            User? result = await _controller.loginEmailPassword();
+            User? result = await controller.loginEmailPassword();
             if (result == null) { //null means unsuccessfull authentication
               showDialog(
                   context: context,
@@ -137,9 +135,6 @@ class _LoginScreen extends State<LoginScreen> {
                       content: Text('Registration failed'),
                     );
                   });
-            } else {
-              appState.setCurrentUserId(result.referenceId!);
-              Navigator.pushNamed(context, '/home');
             }
           },
         child: Text(
@@ -156,7 +151,7 @@ class _LoginScreen extends State<LoginScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Form(
-            key: _controller.formKey,
+            key: _formKey,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
