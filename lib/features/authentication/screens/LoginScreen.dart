@@ -1,4 +1,5 @@
 import 'package:housekeeper_v1/commons.dart';
+import 'package:housekeeper_v1/features/authentication/states/AuthenticationState.dart';
 
 import '../controllers/LoginController.dart';
 
@@ -16,11 +17,13 @@ class _LoginScreen extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController(); //Don't put in build because then it will be reinitialized every time build is called
   final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     LoginController controller = LoginController(context);
 
     final emailField = TextFormField(
+      key: Key('loginEmailField'),
       controller: emailController,
       autofocus: false,
       validator: (value) {
@@ -45,6 +48,7 @@ class _LoginScreen extends State<LoginScreen> {
     );
 
     final passwordField = TextFormField(
+        key: Key('loginPasswordField'),
         obscureText: controller.obscureText,
         controller: passwordController,
         autofocus: false,
@@ -75,7 +79,7 @@ class _LoginScreen extends State<LoginScreen> {
             )));
 
     final txtbutton = TextButton(
-        key: const Key('txtbutton'),
+        key: const Key('loginTxtButton'),
         onPressed: () {
           widget.toggleView!();
         },
@@ -118,7 +122,7 @@ class _LoginScreen extends State<LoginScreen> {
 
 
     final loginEmailPasswordButon = Material(
-      key: const Key('loginEmailPasswordButon'),
+      key: const Key('loginEmailPasswordButton'),
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
@@ -148,34 +152,38 @@ class _LoginScreen extends State<LoginScreen> {
       ),
     );
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  loginGoogleButon,
-                  const SizedBox(height: 45.0),
-                  emailField,
-                  const SizedBox(height: 25.0),
-                  passwordField,
-                  txtbutton,
-                  const SizedBox(height: 35.0),
-                  loginEmailPasswordButon,
-                  const SizedBox(height: 15.0),
-                ],
+    return Consumer3<UserState,UnitState,AuthenticationState>(
+      builder: (context, userState,unitState,authState, child) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      loginGoogleButon,
+                      const SizedBox(height: 45.0),
+                      emailField,
+                      const SizedBox(height: 25.0),
+                      passwordField,
+                      txtbutton,
+                      const SizedBox(height: 35.0),
+                      loginEmailPasswordButon,
+                      const SizedBox(height: 15.0),
+                    ],
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

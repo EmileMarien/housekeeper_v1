@@ -1,12 +1,13 @@
 
-import 'package:housekeeper_v1/screens/settings/Settings.dart' as hk;
 import 'package:housekeeper_v1/core/repositories/data_repository.dart';
+import 'package:housekeeper_v1/routes/register_routes.dart';
 
 import 'commons.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'features/authentication/states/AuthenticationState.dart';
 import 'firebase_options.dart';
 import 'features/authentication/repositories/auth.dart';
+import 'routes/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); //ensure the binding between widget layer and flutter engine is initialized
@@ -46,12 +47,7 @@ class MyApp extends StatelessWidget {
             // colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.cyan[600]),
           ),
           initialRoute: '/authentication',
-          routes: {
-            '/authentication': (context) => Authentication(), //Instead of loginpage
-            '/home': (context) => HomeScreen(),
-            '/create_unit': (context) => CreateUnitPage(),
-            '/settings':(context) => hk.Settings(),
-          },
+          routes: routesApp,
         ),
       ),
     );

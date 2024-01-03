@@ -22,6 +22,7 @@ class _RegistrationScreen extends State<RegistrationScreen> {
     RegistrationController controller = RegistrationController(context);
 
     final emailField = TextFormField(
+      key: Key('registrationEmailField'),
       controller: emailController,
       autofocus: false,
       validator: (value) {
@@ -39,6 +40,7 @@ class _RegistrationScreen extends State<RegistrationScreen> {
           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
     final passwordField = TextFormField(
+      key: Key('registrationPasswordField'),
       obscureText: controller.obscureText,
       controller: passwordController,
       autofocus: false,
@@ -65,12 +67,14 @@ class _RegistrationScreen extends State<RegistrationScreen> {
           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
     final txtbutton = TextButton(
-        onPressed: () {
-          widget.toggleView!();
-        },
-        child: const Text('Go to login'));
+      key: Key('registrationTxtButton'),
+      onPressed: () {
+        widget.toggleView!();
+      },
+      child: const Text('Go to login'));
 
     final registerButton = Material(
+      key: Key('registrationEmailPasswordButton'),
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
