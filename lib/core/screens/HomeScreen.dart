@@ -2,6 +2,7 @@ import 'package:housekeeper_v1/commons.dart';
 
 import '../../../commons.dart';
 import '../controllers/homeController.dart';
+import 'package:housekeeper_v1/features/recipenotes/screens/HomeNoteScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -76,6 +77,11 @@ class _HomeScreen extends State<HomeScreen> {
               onPressed: () => controller.onItemSelected(1),
               color: controller.currentIndex == 1 ? Colors.blue : Colors.black,
             ),
+            IconButton(
+              icon: Icon(Icons.note_alt_sharp),
+              onPressed: () => controller.onItemSelected(2),
+              color: controller.currentIndex == 1 ? Colors.blue : Colors.black,
+            ),
             // Add more icons for other pages as needed
           ],
         ),
@@ -83,7 +89,7 @@ class _HomeScreen extends State<HomeScreen> {
     );
 
 
-    /*final popupMenu = showMenu(
+    final popupMenu = showMenu(
       context: context,
       position: RelativeRect.fromLTRB(MediaQuery.of(context).size.width - 250.0, kToolbarHeight, 0, 0),
       shape: const RoundedRectangleBorder(
@@ -133,22 +139,7 @@ class _HomeScreen extends State<HomeScreen> {
                   }),
                   PopupMenuDivider(),
                   PopupMenuItem(
-                    child: ListTile(
-                      leading: Icon(Icons.add_circle, color: Colors.green),
-                      title: const Text(
-                        'Create New Unit',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.pop(
-                            context); // Close the drawer before navigating to the new page
-                        Navigator.pushNamed(context,
-                            '/create_unit'); // Navigate to the new unit creation page
-                      },
-                    ),
+                    child: Text('hey')
                   ),
                 ],
               ),
@@ -157,7 +148,7 @@ class _HomeScreen extends State<HomeScreen> {
         ),
       ],
     );
-  */
+
     return Scaffold(
       //key: _scaffoldKey,
       appBar: AppBar(
@@ -174,33 +165,23 @@ class _HomeScreen extends State<HomeScreen> {
         ),
         actions: [ //add button on the right side of appbar
           IconButton(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.home),
             onPressed: () {
-              controller.signOut();
+              popupMenu;
             },
           ),
         ],
       ),
       drawer: pageSettingsDrawer,
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Expanded(
-                child: IndexedStack(
+      body: IndexedStack(
                   index: controller.currentIndex,
                   children: [
                     CalendarPage(),
                     MessagingPage(),
+                    homeNoteScreen(),
                     // Add more pages as needed
                   ],
                 ),
-              ),
-            ],
-          ),
-
-        ],
-      ),
       bottomNavigationBar: navigationBar,
     );
   }

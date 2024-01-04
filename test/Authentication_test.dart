@@ -9,8 +9,11 @@ import 'package:housekeeper_v1/core/states/UserState.dart';
 import 'package:housekeeper_v1/features/authentication/screens/LoginScreen.dart';
 import 'package:housekeeper_v1/features/authentication/screens/RegistrationScreen.dart';
 import 'package:housekeeper_v1/features/authentication/states/AuthenticationState.dart';
+import 'package:housekeeper_v1/features/authentication/controllers/RegistrationController.dart';
 
 import 'mock.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:mockito/mockito.dart';
 
 Widget createLoginScreen() => MultiProvider(
   providers: [
@@ -37,6 +40,26 @@ Widget createRegistrationScreen() => MultiProvider(
     ),
   ),
 );
+Widget createAuthenticationScreen() => MultiProvider(
+  providers: [
+    ChangeNotifierProvider(create: (context) => UserState()),
+    ChangeNotifierProvider(create: (context) => UnitState()),
+    ChangeNotifierProvider(create: (context) => AuthenticationState()),
+  ],
+  child: Builder(
+    builder: (context) => MaterialApp(
+      home: Authentication(),
+    ),
+  ),
+);
+
+class MockFirebaseAuth extends Mock implements firebase_auth.FirebaseAuth {}
+class MockUserCredential extends Mock implements firebase_auth.UserCredential {}
+class MockBuildContext extends Mock implements BuildContext {}
+class MockAuthenticationState extends Mock implements AuthenticationState {
+
+}
+class MockUserState extends Mock implements UserState {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized(); //Gets called in setupFirebaseAuthMocks()
@@ -136,48 +159,92 @@ void main() {
 
   });
 
-  group('Registration and login page interaction' , () {
+  group('Registration and Login Page Interaction', () {
 
-    testWidgets('Registration and login page interaction', (WidgetTester tester) async {
-      await tester.pumpWidget(createRegistrationScreen());
-      expect(find.byType(RegistrationScreen), findsOneWidget);
+    testWidgets('Registration and Login Page Interaction', (WidgetTester tester) async {
+      // Build the Login screen.
+      await tester.pumpWidget(createAuthenticationScreen());
+      expect(find.byType(LoginScreen), findsOneWidget);
 
-      await tester.tap(find.byKey(const Key('registrationTxtButton')));
-      await tester.pumpAndSettle();
-      expect(find.text('This field is required'), findsNWidgets(2));
-
-      await tester.enterText(find.byKey(const Key('registrationEmailField'));
-    });
-  });
-}
-/*
-
-
-
-testWidgets('Add and remove a todo', (tester) async {
-      // Build the widget.
-      await tester.pumpWidget(const MaterialApp(
-        home: RegistrationScreen(),
-      ));
-
-      // Enter 'hi' into the TextField.
-      await tester.enterText(find.byType(TextField), 'hi');
-
-      // Tap the add button.
-      await tester.tap(find.byType(FloatingActionButton));
-      // Rebuild the widget with the new item.
+      // Tap on the switch button.
+      await tester.tap(find.byKey(Key('loginTxtButton')));
       await tester.pump();
 
-      // Expect to find the item on screen.
-      expect(find.text('hi'), findsOneWidget);
+      // Expect the Registration screen to be displayed.
+      expect(find.byType(RegistrationScreen), findsOneWidget);
+      expect(find.byType(LoginScreen), findsNothing);
 
-      // Swipe the item to dismiss it.
-      await tester.drag(find.byType(Dismissible), const Offset(500, 0));
+      // Enter valid registration data.
+      await tester.enterText(find.byKey(Key('registrationEmailField')), 'test@example.com');
+      await tester.enterText(find.byKey(Key('registrationPasswordField')), 'password');
 
-      // Build the widget until the dismiss animation ends.
+      // Tap on the registration button.
+      await tester.tap(find.byKey(Key('registrationEmailPasswordButton')));
       await tester.pumpAndSettle();
 
-      // Ensure that the item is no longer on screen.
-      expect(find.text('hi'), findsNothing);
+      // Expect the Home screen to be displayed.
+      //expect(find.byType(HomeScreen), findsOneWidget);
+
     });
- */
+  });
+
+  group('RegistrationController Tests', () { // TODO: fix mockauthstate
+    late MockFirebaseAuth mockFirebaseAuth;
+    late MockBuildContext mockContext;
+    late MockAuthenticationState mockAuthState;
+    late MockUserState mockUserState;
+    late RegistrationController controller;
+
+    setUp(() {
+      mockFirebaseAuth = MockFirebaseAuth();
+      //controller = RegistrationController(mockFirebaseAuth);
+      mockContext = MockBuildContext();
+      mockAuthState = MockAuthenticationState();
+      mockUserState = MockUserState();
+
+      // Set up the behavior of registerEmailPassword on mockAuthState
+      when(mockAuthState.registerEmailPassword(User(email: 'test@example.com', password: 'password')))
+          .thenReturn(User(referenceId: '123', email: 'test@example.com') as Future<User>);
+
+      controller = RegistrationController(mockContext, authState: mockAuthState, userState: mockUserState);
+    });
+
+    test('toggleObscureText', () {
+      // Initial state
+      expect(controller.obscureText, true);
+
+      // Toggle the obscure text
+      controller.toggleObscureText();
+
+      // Expect the obscure text to be toggled
+      expect(controller.obscureText, false);
+    });
+
+    test('register - Successful Registration', () async {
+
+      // Act
+      final result = await controller.register('test@example.com', 'password');
+
+      // Assert
+      expect(result?.referenceId, '123');
+      verify(mockUserState.addUserWithId(User(referenceId: '123'))).called(1);
+      verify(mockUserState.setCurrentUserId('123')).called(1);
+      //verify(mockContext.navigator.pushNamed('/home')).called(1);
+    });
+
+    test('register - Unsuccessful Registration', () async {
+      // Arrange
+      when(mockAuthState.registerEmailPassword(User(email: 'test@example.com',password: 'password'))).thenAnswer((_) async => User(referenceId: null, email: 'test@example.com'));
+
+      // Act
+      final result = await controller.register('test@example.com', 'password');
+
+      // Assert
+      expect(result?.referenceId, null);
+      verifyNever(mockUserState.addUserWithId(User(email: result?.email,referenceId: result?.referenceId)));
+      //verifyNever(mockUserState.setCurrentUserId(result.referenceId));
+      //verifyNever(mockContext.navigator.pushNamed(any));
+    });
+
+  });
+}

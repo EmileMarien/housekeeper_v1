@@ -7,7 +7,9 @@ class RegistrationController {
   final AuthenticationState authState;
   final UserState userState;
 
-  RegistrationController(this.context) : authState = AuthenticationState(), userState = Provider.of<UserState>(context);
+  RegistrationController(this.context, {UserState? userState,AuthenticationState? authState})
+      : authState = authState ?? AuthenticationState(),
+        userState = userState ?? Provider.of<UserState>(context);
 
   bool _obscureText = true;
 
