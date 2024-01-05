@@ -10,13 +10,17 @@ class UserState extends ChangeNotifier {
   User currentUser=User();
 
   Future<void> updateCurrentUser() async {
-
-    try {
-      currentUser = await repositoryUser.getUserById(currentUserId!) ?? User();
-    } catch (e) {
-      print("Error getting current user: $e");
+    if (currentUserId == '') {
+      return;
     }
-    notifyListeners();
+    else {
+      try {
+        currentUser = await repositoryUser.getUserById(currentUserId!) ?? User();
+      } catch (e) {
+        print("Error getting current user: $e");
+      }
+      notifyListeners();
+    }
   }
 
   User getCurrentUser(){
@@ -34,21 +38,24 @@ class UserState extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool checkIfEmailExists(String email) {
+  Future<bool> checkIfEmailExists(String email) async {
     Stream<List<User>> accountsStream = repositoryUser.getUsersStream();
 
     bool emailExists = false;
-    accountsStream.first.then((accountsList) {
-      for (User account in accountsList) {
-        if (account.getEmail() == email) {
-          emailExists = true;
-          break;
-        }
-      }
-    });
+    List<User> accountsList = await accountsStream.first;
 
+    for (User account in accountsList) {
+      print(account.getEmail());
+      if (account.getEmail() == email) {
+        emailExists = true;
+        break;
+      }
+    }
+
+    print(emailExists);
     return emailExists;
   }
+
 
   void addUserWithId(User newPerson) {
     repositoryUser.addUserWithId(newPerson);

@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:lib/services/data_repository.dart'
+import 'package:lib/services/data_repository.dart';
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';

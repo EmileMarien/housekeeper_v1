@@ -83,7 +83,7 @@ class _homeNoteScreenState extends State<homeNoteScreen> {
     return Scaffold(
       body: Column(
         children: [
-          notelist,
+          Text('TODO'),
           createNoteButton,
         ],
       ),

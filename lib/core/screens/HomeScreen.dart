@@ -108,86 +108,33 @@ class _HomeScreen extends State<HomeScreen> {
             enabled: false,
             child: Text(controller.getAccountName()),
           ),
-          const PopupMenuItem(
-            child: Text("Settings"),
-            value: '/settings',
+          PopupMenuItem(
+            child: const Row(
+              children: [
+                Icon(Icons.settings), // Use the appropriate icon for sign out
+                SizedBox(width: 8), // Adjust the spacing between icon and text
+                Text("Settings"),
+              ],
+            ),
+            onTap: () {Navigator.pushNamed(context, '/settings');},
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: '/sign_out',
-            child: Row(
+            child: const Row(
               children: [
                 Icon(Icons.exit_to_app), // Use the appropriate icon for sign out
                 SizedBox(width: 8), // Adjust the spacing between icon and text
                 Text("Sign Out"),
-              ],
-            ),
-           onTap: () {controller.signOut()}, // You can use '/sign_out' or any other value you prefer
+                ],
+              ),
+            onTap: () {controller.signOut();}, // You can use '/sign_out' or any other value you prefer
           )
         ];
       },
       icon: const Icon(Icons.more_vert),
     );
 
-    /*final popupMenu = showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(MediaQuery.of(context).size.width - 250.0, kToolbarHeight, 0, 0),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20.0),
-          bottom: Radius.circular(20.0),
-        ),
-      ),
-      items: [
-        PopupMenuItem(
-          enabled: false,
-          child: Center(
-            child: Container(
-              //color: Colors.grey[200], // Light grey background color
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(context, '/settings');
-                        },
-                        child: Icon(Icons.settings, color: Colors.black,),
-                      ),
-                      Spacer(),
-                      Text(controller.getAccountName()),
-                      // Add a spacer to push the icons to the right
-                      Spacer(),
-                      InkWell(
-                        onTap: () {
-                          controller.signOut();
-                        },
-                        child: Icon(
-                          Icons.exit_to_app_outlined, color: Colors.black,),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8.0),
-                  PopupMenuDivider(),
-                  ...controller.units.map((unit) {
-                    return PopupMenuItem<Unit>(
-                      value: unit,
-                      child: Text(unit.getName()),
-                    );
-                  }),
-                  PopupMenuDivider(),
-                  PopupMenuItem(
-                    child: Text('hey')
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-    */
+
     return Scaffold(
       appBar: AppBar(
         leading: Builder(

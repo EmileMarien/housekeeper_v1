@@ -15,8 +15,9 @@ class LoginController {
   final TextEditingController passwordController = TextEditingController();
 
 
-  bool checkIfEmailExists(text) {
-    return userState.checkIfEmailExists(text);
+  Future<bool> checkIfEmailExists(String text) async {
+    bool emailExists = await userState.checkIfEmailExists(text);
+    return emailExists;
   }
 
   void navigateToHome(){
