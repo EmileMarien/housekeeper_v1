@@ -209,16 +209,7 @@ void main() {
       controller = RegistrationController(mockContext, authState: mockAuthState, userState: mockUserState);
     });
 
-    test('toggleObscureText', () {
-      // Initial state
-      expect(controller.obscureText, true);
 
-      // Toggle the obscure text
-      controller.toggleObscureText();
-
-      // Expect the obscure text to be toggled
-      expect(controller.obscureText, false);
-    });
 
     test('register - Successful Registration', () async {
 

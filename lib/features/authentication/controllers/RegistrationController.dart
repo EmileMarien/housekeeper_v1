@@ -11,18 +11,12 @@ class RegistrationController {
       : authState = authState ?? AuthenticationState(),
         userState = userState ?? Provider.of<UserState>(context);
 
-  bool _obscureText = true;
 
-  bool get obscureText => _obscureText;
 
   void navigateToHome(){
     Navigator.pushNamed(context, '/home');
   }
 
-
-  void toggleObscureText() {
-    _obscureText = !_obscureText;
-  }
 
   Future<User?> register(email,password) async {
     User result = await authState.registerEmailPassword(

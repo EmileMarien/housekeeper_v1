@@ -10,16 +10,10 @@ class LoginController {
 
   LoginController(this.context) : authState = AuthenticationState(), userState = Provider.of<UserState>(context);
 
-  bool _obscureText = true;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  bool get obscureText => _obscureText;
-
-  void toggleObscureText() {
-    _obscureText = !_obscureText;
-  }
 
   bool checkIfEmailExists(text) {
     return userState.checkIfEmailExists(text);

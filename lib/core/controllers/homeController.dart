@@ -14,7 +14,8 @@ class HomeController {
   HomeController(this.context)
       : unitState = Provider.of<UnitState>(context),
         userState = Provider.of<UserState>(context),
-        authState = AuthenticationState();
+        authState = AuthenticationState(),
+        units=[];
 
   int currentIndex = 0;
 
@@ -28,6 +29,7 @@ class HomeController {
   void onItemSelected(int index) {
     currentIndex = index;
   }
+
   void setCurrentUnit(Unit unit) {
     unitState.setCurrentUnit(unit);
     Navigator.pop(context);

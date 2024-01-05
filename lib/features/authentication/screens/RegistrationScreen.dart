@@ -17,6 +17,8 @@ class _RegistrationScreen extends State<RegistrationScreen> {
 
   final TextEditingController emailController = TextEditingController(); //Don't put in build because then it will be reinitialized every time build is called
   final TextEditingController passwordController = TextEditingController();
+  bool _obscureText = true;
+
   @override
   Widget build(BuildContext context) {
     RegistrationController controller = RegistrationController(context);
@@ -41,7 +43,7 @@ class _RegistrationScreen extends State<RegistrationScreen> {
 
     final passwordField = TextFormField(
       key: Key('registrationPasswordField'),
-      obscureText: controller.obscureText,
+      obscureText: _obscureText,
       controller: passwordController,
       autofocus: false,
       validator: (value) {
@@ -57,10 +59,10 @@ class _RegistrationScreen extends State<RegistrationScreen> {
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Password",
-          suffixIcon: IconButton(icon: Icon(controller.obscureText ? Icons.visibility : Icons.visibility_off),
+          suffixIcon: IconButton(icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
             onPressed: (){
               setState(() {
-                controller.toggleObscureText();
+                _obscureText = !_obscureText;
               });
             },),
           border:

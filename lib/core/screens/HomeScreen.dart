@@ -13,9 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreen extends State<HomeScreen> {
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<
-  ScaffoldState>(); // Add a GlobalKey for the Scaffold
-
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     HomeController controller = HomeController(context);
@@ -69,18 +67,27 @@ class _HomeScreen extends State<HomeScreen> {
           children: [
             IconButton(
               icon: Icon(Icons.chat_rounded),
-              onPressed: () => controller.onItemSelected(0),
-              color: controller.currentIndex == 0 ? Colors.blue : Colors.black,
+              onPressed: () {
+                _currentIndex=0;
+                print('0');
+              } ,
+              color: _currentIndex == 0 ? Colors.blue : Colors.black,
             ),
             IconButton(
               icon: Icon(Icons.calendar_month_sharp),
-              onPressed: () => controller.onItemSelected(1),
-              color: controller.currentIndex == 1 ? Colors.blue : Colors.black,
+              onPressed: () {
+                _currentIndex=1;
+                print('1');
+              } ,
+              color: _currentIndex == 1 ? Colors.blue : Colors.black,
             ),
             IconButton(
               icon: Icon(Icons.note_alt_sharp),
-              onPressed: () => controller.onItemSelected(2),
-              color: controller.currentIndex == 1 ? Colors.blue : Colors.black,
+              onPressed: () {
+                _currentIndex=2;
+                print('2');
+              } ,
+              color: _currentIndex == 2 ? Colors.blue : Colors.black,
             ),
             // Add more icons for other pages as needed
           ],
@@ -88,8 +95,40 @@ class _HomeScreen extends State<HomeScreen> {
       ),
     );
 
+    final popupMenu= PopupMenuButton(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.0),
+          bottom: Radius.circular(20.0),
+        ),
+      ),
+      itemBuilder: (BuildContext bc) {
+        return [
+          PopupMenuItem(
+            enabled: false,
+            child: Text(controller.getAccountName()),
+          ),
+          const PopupMenuItem(
+            child: Text("Settings"),
+            value: '/settings',
+          ),
+          const PopupMenuItem(
+            value: '/sign_out',
+            child: Row(
+              children: [
+                Icon(Icons.exit_to_app), // Use the appropriate icon for sign out
+                SizedBox(width: 8), // Adjust the spacing between icon and text
+                Text("Sign Out"),
+              ],
+            ),
+           onTap: () {controller.signOut()}, // You can use '/sign_out' or any other value you prefer
+          )
+        ];
+      },
+      icon: const Icon(Icons.more_vert),
+    );
 
-    final popupMenu = showMenu(
+    /*final popupMenu = showMenu(
       context: context,
       position: RelativeRect.fromLTRB(MediaQuery.of(context).size.width - 250.0, kToolbarHeight, 0, 0),
       shape: const RoundedRectangleBorder(
@@ -148,9 +187,8 @@ class _HomeScreen extends State<HomeScreen> {
         ),
       ],
     );
-
+    */
     return Scaffold(
-      //key: _scaffoldKey,
       appBar: AppBar(
         leading: Builder(
           builder: (context) =>
@@ -164,17 +202,12 @@ class _HomeScreen extends State<HomeScreen> {
               ),
         ),
         actions: [ //add button on the right side of appbar
-          IconButton(
-            icon: Icon(Icons.home),
-            onPressed: () {
-              popupMenu;
-            },
-          ),
+          popupMenu,
         ],
       ),
       drawer: pageSettingsDrawer,
       body: IndexedStack(
-                  index: controller.currentIndex,
+                  index: _currentIndex,
                   children: [
                     CalendarPage(),
                     MessagingPage(),
